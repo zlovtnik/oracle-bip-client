@@ -1,0 +1,12 @@
+[package]
+name = "oracle-bip-client"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+reqwest = {version = "0.12.9",  features = ["blocking"] }
+tokio = { version = "1", features = ["full"] }
+base64 = "0.22.1"
+roxmltree = "0.20.0"
+flate2 = "1.0"
+xml-rs = "0.8"
