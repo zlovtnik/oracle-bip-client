@@ -1,6 +1,5 @@
 mod get_report;
 mod get_xml_by_report;
-use std::io::Read;
 use crate::get_report::get_report;
 
 fn main() {
