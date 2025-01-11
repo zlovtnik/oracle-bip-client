@@ -2,10 +2,10 @@ use std::io::Read;
 use flate2::bufread::GzDecoder;
 use crate::get_xml_by_report::get_xml;
 
-pub fn get_report(url: &str, username: &str, password: &str, report_path: &str, output_format: &str, params: Vec<(&str, &str)>)
+pub fn get_report(url: String,  username: String, password: String, report_path: String, output_format: &String, params: Vec<(&String, &String)>)
                   -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     let client = reqwest::blocking::Client::new();
-    let body = get_xml(report_path, output_format, params);
+    let body = get_xml(report_path.clone(), output_format, params);
 
     let res = client
         .post(url)
