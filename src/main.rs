@@ -24,7 +24,8 @@ fn resolve_parameters() -> (String, String, String, String, Vec<(&'static str, S
     let mut params = Vec::new();
     for (key, value) in env::vars() {
         if key.starts_with("P_") {
-            params.push((Box::leak(key.into_boxed_str()), value));
+            let key: &'static str = Box::leak(key.into_boxed_str());
+            params.push((key, value));
         }
     }
 
