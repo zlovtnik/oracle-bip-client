@@ -1,7 +1,7 @@
 use xml::writer::{EmitterConfig, XmlEvent};
 use std::str::from_utf8;
 
-pub fn get_xml(report_path: &str, output_format: &str, params: Vec<(&str, &str)>) -> String {
+pub fn get_xml(report_path: &str, output_format: &str, params: Vec<(&str, String)>) -> String {
     let mut buffer = Vec::new();
     let mut writer = EmitterConfig::new().perform_indent(true).create_writer(&mut buffer);
 
@@ -29,7 +29,7 @@ pub fn get_xml(report_path: &str, output_format: &str, params: Vec<(&str, &str)>
         writer.write(XmlEvent::characters(key)).unwrap();
         writer.write(XmlEvent::end_element()).unwrap();
         writer.write(XmlEvent::start_element("pub:values")).unwrap();
-        writer.write(XmlEvent::characters(value)).unwrap();
+        writer.write(XmlEvent::characters(&value)).unwrap();
         writer.write(XmlEvent::end_element()).unwrap();
         writer.write(XmlEvent::end_element()).unwrap();
     }
@@ -39,5 +39,4 @@ pub fn get_xml(report_path: &str, output_format: &str, params: Vec<(&str, &str)>
     writer.write(XmlEvent::end_element()).unwrap();
     writer.write(XmlEvent::end_element()).unwrap();
     from_utf8(&buffer).unwrap().to_string()
-
 }
