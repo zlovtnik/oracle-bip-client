@@ -1,6 +1,8 @@
 mod get_report;
 mod get_xml_by_report;
+mod save_to_db;
 use crate::get_report::get_report;
+use crate::save_to_db::save_to_db;
 use dotenv::dotenv;
 use std::env;
 
@@ -13,6 +15,10 @@ fn main() {
     let result = get_report(&*url, &*username, &*password, &*report_path, output_format, params);
     let test = result.unwrap();
     std::fs::write("test.xml", test).unwrap();
+
+    let db_url = dotenv::var("db_url").expect("erro ao obter db_url");
+    let report_data = std::fs::read_to_string("test.xml").expect("erro ao ler o arquivo de relatório");
+    save_to_db(&db_url, &report_data).expect("erro ao salvar no banco de dados");
 }
 
 fn resolve_parameters() -> (String, String, String, String, Vec<(&'static str, String)>) {
