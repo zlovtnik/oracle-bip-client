@@ -1,7 +1,9 @@
 use xml::writer::{EmitterConfig, XmlEvent};
 use std::str::from_utf8;
+use log::{info, debug};
 
 pub fn get_xml(report_path: &str, output_format: &str, params: Vec<(&str, String)>) -> String {
+    info!("Generating XML for report: {}", report_path);
     let mut buffer = Vec::new();
     let mut writer = EmitterConfig::new().perform_indent(true).create_writer(&mut buffer);
 
@@ -38,5 +40,7 @@ pub fn get_xml(report_path: &str, output_format: &str, params: Vec<(&str, String
     writer.write(XmlEvent::end_element()).unwrap();
     writer.write(XmlEvent::end_element()).unwrap();
     writer.write(XmlEvent::end_element()).unwrap();
-    from_utf8(&buffer).unwrap().to_string()
+    let xml_string = from_utf8(&buffer).unwrap().to_string();
+    debug!("Generated XML: {}", xml_string);
+    xml_string
 }
