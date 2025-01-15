@@ -1,6 +1,8 @@
 mod get_report;
 mod get_xml_by_report;
 mod save_to_db;
+mod soap_operations;
+
 use crate::get_report::get_report;
 use crate::save_to_db::save_to_db;
 use dotenv::dotenv;
