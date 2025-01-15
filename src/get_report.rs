@@ -4,7 +4,7 @@ use base64::Engine;
 use flate2::bufread::GzDecoder;
 use crate::get_xml_by_report::get_xml;
 
-pub fn get_report(url: &str, username: &str, password: &str, report_path: &str, output_format: &str, params: Vec<(&str, &str)>)
+pub fn get_report(url: &str, username: &str, password: &str, report_path: &str, output_format: &str, params: Vec<(&str, String)>)
                   -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     let client = reqwest::blocking::Client::new();
     let body = get_xml(report_path, output_format, params);
