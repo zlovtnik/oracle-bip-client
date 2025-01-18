@@ -1,22 +1,4 @@
-<?xml version = '1.0' encoding = 'utf-8'?>
-<dataModel xmlns="http://xmlns.oracle.com/oxp/xmlp" version="2.0" xmlns:xdm="http://xmlns.oracle.com/oxp/xmlp" xmlns:xsd="http://wwww.w3.org/2001/XMLSchema" defaultDataSourceRef="ApplicationDB_FSCM">
-   <description>
-<![CDATA[$Header: LACLS_ExtractTaxesDm.xdmz 11.1.1113.1 2021/11/02 22:51:39 BMANCINI noship $ ]]>
-   </description>
-   <dataProperties>
-      <property name="include_parameters" value="true"/>
-      <property name="include_null_Element" value="true"/>
-      <property name="include_rowsettag" value="false"/>
-      <property name="exclude_tags_for_lob" value="false"/>
-      <property name="xml_tag_case" value="upper"/>
-      <property name="generate_output_format" value="xml"/>
-      <property name="sql_monitor_report_generated" value="false"/>
-      <property name="optimize_query_executions" value="false"/>
-   </dataProperties>
-   <dataSets>
-      <dataSet name="Q_TAXES" type="complex">
-         <sql>
-            <![CDATA[SELECT
+SELECT
        TAX_ID
      , TAX
      , TAX_REGIME_CODE
@@ -86,67 +68,9 @@ FROM
                      AND trunc(sysdate) between trunc(ZRB.EFFECTIVE_FROM) and trunc(NVL(ZRB.EFFECTIVE_TO,SYSDATE))                     
        )
 WHERE  UPPER(TAX_TYPE_CODE) LIKE nvl('%'||UPPER(:P_TAX_TYPE_CODE)||'%', UPPER(TAX_TYPE_CODE))
-       AND IBGE_CODE = NVL(:P_IBGE_CODE, IBGE_CODE)]]>
-         </sql>
-      </dataSet>
-   </dataSets>
-   <output rootName="DATA_DS" uniqueRowName="false">
-      <nodeList name="data-structure">
-         <dataStructure tagName="DATA_DS">
-            <group name="G_TAXES" label="G_TAXES" source="Q_TAXES">
-               <element name="TAX_ID" value="TAX_ID" label="TAX_ID" dataType="xsd:double" breakOrder="" fieldOrder="1"/>
-               <element name="TAX" value="TAX" label="TAX" dataType="xsd:string" breakOrder="" fieldOrder="2"/>
-               <element name="TAX_REGIME_CODE" value="TAX_REGIME_CODE" label="TAX_REGIME_CODE" dataType="xsd:string" breakOrder="" fieldOrder="3"/>
-               <element name="TAX_TYPE_CODE" value="TAX_TYPE_CODE" label="TAX_TYPE_CODE" dataType="xsd:string" breakOrder="" fieldOrder="4"/>
-               <element name="TAX_RATE_ID" value="TAX_RATE_ID" label="TAX_RATE_ID" dataType="xsd:double" breakOrder="" fieldOrder="5"/>
-               <element name="TAX_RATE_CODE" value="TAX_RATE_CODE" label="TAX_RATE_CODE" dataType="xsd:string" breakOrder="" fieldOrder="6"/>
-               <element name="PERCENTAGE_RATE" value="PERCENTAGE_RATE" label="PERCENTAGE_RATE" dataType="xsd:double" breakOrder="" fieldOrder="7"/>
-               <element name="TAX_STATUS_CODE" value="TAX_STATUS_CODE" label="TAX_STATUS_CODE" dataType="xsd:string" breakOrder="" fieldOrder="8"/>
-               <element name="TAX_JURISDICTION_CODE" value="TAX_JURISDICTION_CODE" label="TAX_JURISDICTION_CODE" dataType="xsd:string" breakOrder="" fieldOrder="9"/>
-               <element name="REGIME_TYPE_FLAG" value="REGIME_TYPE_FLAG" label="REGIME_TYPE_FLAG" dataType="xsd:string" breakOrder="" fieldOrder="10"/>
-               <element name="IBGE_CODE" value="IBGE_CODE" label="IBGE_CODE" dataType="xsd:string" breakOrder="" fieldOrder="11"/>
-            </group>
-         </dataStructure>
-      </nodeList>
-   </output>
-   <eventTriggers/>
-   <lexicals/>
-   <parameters>
-      <parameter name="P_TAX" dataType="xsd:string" rowPlacement="1">
-         <input label="Tax"/>
-      </parameter>
-      <parameter name="P_TAX_RATE" dataType="xsd:string" rowPlacement="1">
-         <input label="Tax Rate"/>
-      </parameter>
-      <parameter name="P_REGIME_TYPE" dataType="xsd:string" rowPlacement="1">
-         <select label="Regime Type" valueSet="LOV_REGIME_TYPE" multiple="false" all="false" allValue="null"/>
-      </parameter>
-      <parameter name="P_TAX_TYPE_CODE" dataType="xsd:string" rowPlacement="1">
-         <input label="Tax Type"/>
-      </parameter>
-      <parameter name="P_IBGE_CODE" dataType="xsd:string" rowPlacement="1">
-         <input label="IBGE Code"/>
-      </parameter>
-   </parameters>
-   <valueSets>
-      <valueSet id="LOV_REGIME_TYPE" inuse="true">
-         <sql dataSourceRef="ApplicationDB_FSCM">
-            <![CDATA[Select distinct DECODE(REGIME_TYPE_FLAG,'W','Withholding','Transaction') ,
+       AND IBGE_CODE = NVL(:P_IBGE_CODE, IBGE_CODE);
+
+Select distinct DECODE(REGIME_TYPE_FLAG,'W','Withholding','Transaction') ,
 REGIME_TYPE_FLAG 
 from 
-ZX_REGIMES_B]]>
-         </sql>
-      </valueSet>
-   </valueSets>
-   <bursting/>
-   <validations>
-      <validation>N</validation>
-   </validations>
-   <display>
-      <layouts>
-         <layout name="Q_TAXES" left="261px" top="444px"/>
-         <layout name="DATA_DS" left="5px" top="444px"/>
-      </layouts>
-      <groupLinks/>
-   </display>
-</dataModel>
+ZX_REGIMES_B

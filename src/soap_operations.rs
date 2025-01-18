@@ -4,8 +4,10 @@ use base64::Engine;
 use flate2::bufread::GzDecoder;
 use reqwest::blocking::Client;
 use roxmltree::Document;
+use log::{info, debug};
 
 pub fn send_soap_request(url: &str, username: &str, password: &str, body: String) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
+    info!("Sending SOAP request to URL: {}", url);
     let client = Client::new();
 
     let res = client
@@ -17,10 +19,12 @@ pub fn send_soap_request(url: &str, username: &str, password: &str, body: String
         .send()?;
 
     let body = res.bytes()?;
+    debug!("SOAP response body: {:?}", body);
 
     let mut d = GzDecoder::new(&body[..]);
     let mut decompressed_body = Vec::new();
     d.read_to_end(&mut decompressed_body)?;
+    debug!("Decompressed SOAP response body: {:?}", decompressed_body);
 
     Ok(decompressed_body)
 }

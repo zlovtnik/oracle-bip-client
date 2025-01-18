@@ -7,8 +7,13 @@ use crate::get_report::get_report;
 use crate::save_to_db::save_to_db;
 use dotenv::dotenv;
 use std::env;
+use log::{info, error};
+use env_logger;
 
 fn main() {
+    env_logger::init();
+    info!("Starting main function");
+
     dotenv().ok();
 
     let (url, username, password, report_path, params) = resolve_parameters();
@@ -21,6 +26,8 @@ fn main() {
     let db_url = dotenv::var("db_url").expect("erro ao obter db_url");
     let report_data = std::fs::read_to_string("test.xml").expect("erro ao ler o arquivo de relatório");
     save_to_db(&db_url, &report_data).expect("erro ao salvar no banco de dados");
+
+    info!("End of main function");
 }
 
 fn resolve_parameters() -> (String, String, String, String, Vec<(&'static str, String)>) {
