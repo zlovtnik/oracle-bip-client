@@ -2,9 +2,11 @@ mod get_report;
 mod get_xml_by_report;
 mod save_to_db;
 mod soap_operations;
+mod ollama_api;
 
 use crate::get_report::get_report;
 use crate::save_to_db::save_to_db;
+use crate::ollama_api::OllamaApi;
 use dotenv::dotenv;
 use std::env;
 use log::{info, error};
@@ -26,6 +28,15 @@ fn main() {
     let db_url = dotenv::var("db_url").expect("erro ao obter db_url");
     let report_data = std::fs::read_to_string("test.xml").expect("erro ao ler o arquivo de relatório");
     save_to_db(&db_url, &report_data).expect("erro ao salvar no banco de dados");
+
+    let ollama_host = dotenv::var("ollama_host").expect("erro ao obter ollama_host");
+    let ollama_port = dotenv::var("ollama_port").expect("erro ao obter ollama_port").parse().expect("erro ao converter ollama_port para u16");
+    let ollama_api = OllamaApi::new(ollama_host, ollama_port);
+    let message = "Hello, Ollama!";
+    match ollama_api.send_message(message) {
+        Ok(response) => println!("Received response from Ollama API: {}", response),
+        Err(e) => eprintln!("Failed to send message to Ollama API: {}", e),
+    }
 
     info!("End of main function");
 }
