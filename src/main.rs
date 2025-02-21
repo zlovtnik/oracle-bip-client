@@ -9,7 +9,7 @@ use crate::save_to_db::save_to_db;
 use crate::ollama_api::OllamaApi;
 use dotenv::dotenv;
 use std::env;
-use log::{info, error};
+use log::info;
 use env_logger;
 
 fn main() {
