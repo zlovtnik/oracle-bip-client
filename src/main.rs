@@ -24,6 +24,7 @@ async fn llama_route() -> impl Responder {
     }
 }
 
+#[tokio::main]
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     env_logger::init();
