@@ -6,13 +6,26 @@ mod ollama_api;
 
 use crate::get_report::get_report;
 use crate::save_to_db::save_to_db;
-use crate::ollama_api::OllamaApi;
+use crate::ollama_api::{OllamaApi, select_model, create_ai_models};
 use dotenv::dotenv;
 use std::env;
 use log::info;
 use env_logger;
+use actix_web::{web, App, HttpServer, Responder};
 
-fn main() {
+async fn llama_route() -> impl Responder {
+    let ollama_host = dotenv::var("ollama_host").expect("erro ao obter ollama_host");
+    let ollama_port = dotenv::var("ollama_port").expect("erro ao obter ollama_port").parse().expect("erro ao converter ollama_port para u16");
+    let ollama_api = OllamaApi::new(ollama_host, ollama_port);
+    let message = "Hello, Ollama!";
+    match ollama_api.send_message(message) {
+        Ok(response) => format!("Received response from Ollama API: {}", response),
+        Err(e) => format!("Failed to send message to Ollama API: {}", e),
+    }
+}
+
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
     env_logger::init();
     info!("Starting main function");
 
@@ -38,7 +51,22 @@ fn main() {
         Err(e) => eprintln!("Failed to send message to Ollama API: {}", e),
     }
 
+    // Call the new model selection functionality
+    let model = select_model("model_name");
+    println!("Selected model: {}", model);
+
+    // Create new AI models based on a directory with JSON files
+    create_ai_models("path/to/json/directory");
+
     info!("End of main function");
+
+    HttpServer::new(|| {
+        App::new()
+            .route("/llama", web::get().to(llama_route))
+    })
+    .bind("127.0.0.1:8080")?
+    .run()
+    .await
 }
 
 fn resolve_parameters() -> (String, String, String, String, Vec<(&'static str, String)>) {
