@@ -23,3 +23,33 @@ Cargo.lock
 # Added by cargo
 
 /target
+
+# Environment files
+.env
+.env.*
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Logs and databases
+*.log
+*.sqlite
+*.db
+
+# Build artifacts
+dist/
+build/
+out/
+
+# Test coverage
+coverage/
+.coverage/
+
+# Local development files
+notes/
+tmp/
+temp/
