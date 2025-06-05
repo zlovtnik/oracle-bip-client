@@ -1,7 +1,33 @@
+//! Functions for generating SOAP XML for Oracle BI Publisher report requests.
+
 use xml::writer::{EmitterConfig, XmlEvent};
 use std::str::from_utf8;
 use log::{info, debug};
 
+/// Generates a SOAP XML request for an Oracle BI Publisher report.
+///
+/// This function creates a properly formatted SOAP envelope containing
+/// the necessary parameters to request a report from Oracle BI Publisher.
+///
+/// # Arguments
+///
+/// * `report_path` - The absolute path to the report in the Oracle BI Publisher catalog
+/// * `output_format` - The desired output format (e.g., "pdf", "xlsx", "html")
+/// * `params` - A vector of key-value pairs representing the report parameters
+///
+/// # Returns
+///
+/// A String containing the complete XML SOAP request
+///
+/// # Example
+///
+/// ```
+/// let params = vec![
+///     ("DEPARTMENT_ID", "10".to_string()),
+///     ("EMPLOYEE_ID", "7566".to_string())
+/// ];
+/// let xml = get_xml("/path/to/report", "pdf", params);
+/// ```
 pub fn get_xml(report_path: &str, output_format: &str, params: Vec<(&str, String)>) -> String {
     info!("Generating XML for report: {}", report_path);
     let mut buffer = Vec::new();

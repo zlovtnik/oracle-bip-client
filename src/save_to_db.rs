@@ -1,6 +1,44 @@
+//! Database operations for storing report data.
+//!
+//! This module provides functionality to save report data to an Oracle database,
+//! creating the necessary table if it doesn't already exist.
+
 use oracle::Connection;
 use std::error::Error;
 
+/// Saves report data to an Oracle database.
+///
+/// This function connects to an Oracle database using the provided connection URL,
+/// creates a table named `extracted_report` if it doesn't exist, and inserts the
+/// report data as a CLOB (Character Large Object).
+///
+/// # Arguments
+///
+/// * `db_url` - The Oracle database connection URL
+/// * `report_data` - The report data to save as a string
+///
+/// # Returns
+///
+/// A Result indicating success or failure of the database operation.
+///
+/// # Errors
+///
+/// Returns an error if:
+/// * Connection to the database fails
+/// * Table creation fails
+/// * Data insertion fails
+/// * Transaction commit fails
+///
+/// # Example
+///
+/// ```
+/// let db_url = "username/password@//localhost:1521/ORCLPDB1";
+/// let report_data = "<report>Report data goes here</report>";
+/// match save_to_db(db_url, report_data) {
+///     Ok(_) => println!("Successfully saved report to database"),
+///     Err(e) => eprintln!("Failed to save report: {}", e),
+/// }
+/// ```
 pub fn save_to_db(db_url: &str, report_data: &str) -> Result<(), Box<dyn Error>> {
     let conn = Connection::connect(db_url, "", "")?;
 
